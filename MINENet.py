@@ -3,6 +3,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.utils import weight_norm as wn
 
+# code based on https://github.com/abnan/DRMIME/blob/master/03_MultiModal_Registration_Affine.ipynb
+
 nChannel = 1
 n_neurons = 100
 
