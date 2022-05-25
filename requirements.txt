@@ -1,0 +1,9 @@
+numpy
+matplotlib
+spyder
+scikit-image
+scikit-learn
+--extra-index-url https://download.pytorch.org/whl/cu113
+torch 
+torchvision 
+torchaudio 
