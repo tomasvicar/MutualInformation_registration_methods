@@ -114,7 +114,7 @@ if __name__ == '__main__':
 
 
 
-    # MI = MutualInformation(num_bins=64, sample=20000, kernel=MutualInformation.KERNEL_GAUSS, sigma=0.4).to(device)
+    MI = MutualInformation(num_bins=64, sample=20000, kernel=MutualInformation.KERNEL_GAUSS, sigma=0.4).to(device)
     # MI = MutualInformation(num_bins=256, sample=None, kernel=MutualInformation.KERNEL_BSPLINE).to(device)
     mi_test_1 = MI(img1, img1).detach().cpu().numpy()
     mi_test_2 = MI(img1, img2).detach().cpu().numpy()

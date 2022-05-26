@@ -39,13 +39,13 @@ fixed = imread('knee1.png')
 
 transform = AffineTransform(translation=[-20,-20])
 moving = warp(fixed, transform, mode='wrap', preserve_range=True)
-# moving = rotate(moving,3)
+# moving = rotate(moving,45,preserve_range=True)
 moving = moving.astype(fixed.dtype)
 
 
 
-fixed = (fixed // 3).astype(np.float32)
-moving = (moving // 3).astype(np.float32)
+fixed = fixed.astype(np.float32)/255
+moving = moving.astype(np.float32)/255
 
 
 fixed = fixed[::2,::2]
@@ -57,6 +57,9 @@ moving = moving[::2,::2]
 # moving = moving[7:-7,7:-7]
 fixed = fixed[15:-15,12:-12]
 moving = moving[7:-7,6:-6]
+
+
+
 
 
 A = torch.unsqueeze(torch.unsqueeze(torch.from_numpy(fixed),0),1).to(config.device)

@@ -20,7 +20,7 @@ def compute_entropy(C, N, eps=1e-7):
     return p*torch.log2(torch.clamp(p, min=eps, max=None))
 
 
-eps=1e-7
+
 
 config = Config()
 
