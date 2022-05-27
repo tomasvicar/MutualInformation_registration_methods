@@ -4,7 +4,7 @@ import torch
 import torch.nn.functional as F
 import torch.fft
 from skimage.transform import rotate
-
+import time
 
 class Cmif():
     
@@ -67,29 +67,53 @@ class Cmif():
         M_B = F.pad(M_B, (pad_sz_B_1[1], pad_sz_B_2[1], pad_sz_B_1[0], pad_sz_B_2[0]), mode='constant', value=0)
          
 
+        A[M_A == 0] = Q_A + 1
+        B[M_B == 0] = Q_B + 1
+        
 
         M_A_fft = torch.fft.rfft2(M_A)
+        M_B_fft = torch.conj(torch.fft.rfft2(M_B))
+        N = torch.fft.fftshift(torch.fft.irfft2(M_A_fft * M_B_fft))
 
+
+    
+        ### batchwise implementation - it is not faster...
+        # A_ffts = []
+        # for a in range(Q_A):
+        #     A_ffts.append(self.float_compare(A, a))
+        # A_ffts = torch.fft.rfft2(torch.cat(A_ffts,0))
+
+        # B_ffts= []
+        # for b in range(Q_B):
+        #     B_ffts.append(self.float_compare(B, b))
+        # B_ffts = torch.conj(torch.fft.rfft2(torch.cat(B_ffts,0)))
+        
+
+        # C_A_a = torch.round(torch.fft.fftshift(torch.fft.irfft2(A_ffts * M_B_fft)))
+        # H_A = -torch.sum(self.compute_entropy(C_A_a,N),dim=0)
+        
+        # C_B_b = torch.round(torch.fft.fftshift(torch.fft.irfft2(M_A_fft * B_ffts)))
+        # H_B = -torch.sum(self.compute_entropy(C_B_b,N),dim=0)
+        
+        # H_AB = torch.zeros_like(A)
+        # for a in range(Q_A):
+        #     C_AB_ab = torch.round(torch.fft.fftshift(torch.fft.irfft2(A_ffts[[a],:,:,:] * B_ffts)))
+        #     H_AB = H_AB - torch.sum(self.compute_entropy(C_AB_ab,N),dim=0)
+        
+
+        
+        
+        
+        #### iterative implementation -  same speed but nicer
         A_ffts = []
         for a in range(Q_A):
             A_ffts.append(torch.fft.rfft2(self.float_compare(A, a)))
 
 
-
-        M_B_fft = torch.conj(torch.fft.rfft2(M_B))
-
         B_ffts= []
         for b in range(Q_B):
             B_ffts.append(torch.conj(torch.fft.rfft2(self.float_compare(B, b))))
-
-
-        N = torch.fft.fftshift(torch.fft.irfft2(M_A_fft * M_B_fft))
-
-
-
-
-
-
+        
         H_A = torch.zeros_like(A)
         for a in range(Q_A):
             C_A_a = torch.round(torch.fft.fftshift(torch.fft.irfft2(A_ffts[a] * M_B_fft)))
@@ -107,7 +131,6 @@ class Cmif():
                 H_AB = H_AB - self.compute_entropy(C_AB_ab,N)
                 
                 
-
         MI = H_A + H_B - H_AB
 
         MI = MI.detach().cpu().numpy()[0,0,:,:]

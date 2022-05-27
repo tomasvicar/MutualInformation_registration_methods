@@ -87,18 +87,18 @@ if __name__ == '__main__':
     fixed = imread('knee1.png')
 
 
-    # moving = imread('knee2.png')
-    # transform = AffineTransform(translation=[-10,-10])
-    # moving = warp(moving, transform, mode='wrap', preserve_range=True)
-    # moving = rotate(moving,9,preserve_range=True)
-    # moving = moving.astype(fixed.dtype)
+    moving = imread('knee2.png')
+    transform = AffineTransform(translation=[-10,-10])
+    moving = warp(moving, transform, mode='wrap', preserve_range=True)
+    moving = rotate(moving,9,preserve_range=True)
+    moving = moving.astype(fixed.dtype)
 
 
     
-    transform = AffineTransform(translation=[-10,-10])
-    moving = warp(fixed, transform, mode='wrap', preserve_range=True)
-    moving = rotate(moving,7.5,preserve_range=True)
-    moving = moving.astype(fixed.dtype)
+    # transform = AffineTransform(translation=[-10,-10])
+    # moving = warp(fixed, transform, mode='wrap', preserve_range=True)
+    # moving = rotate(moving,7.5,preserve_range=True)
+    # moving = moving.astype(fixed.dtype)
 
 
 
@@ -109,7 +109,7 @@ if __name__ == '__main__':
     moving = moving[::2,::2]
     
     
-    bayesOptimizedRotationCmif = BayesOptimizedRotationCmif(fixed, moving, init_points=5, n_iter=25, rotation_range=[-10,10], overlap=0.8, device=device, bins=50)
+    bayesOptimizedRotationCmif = BayesOptimizedRotationCmif(fixed, moving, init_points=5, n_iter=50, rotation_range=[-10,10], overlap=0.8, device=device, bins=128)
     
     best_shift, best_rot = bayesOptimizedRotationCmif.optimize()
     
