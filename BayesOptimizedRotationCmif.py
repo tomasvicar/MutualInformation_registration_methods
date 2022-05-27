@@ -28,7 +28,7 @@ class Wrapper(object):
         rot = params['rot']
         cmif = Cmif(self.overlap, self.device, self.bins)
         
-        MI_max_pos, MI_max, MI_map = cmif.get_transormation(fixed,moving,rot_deg=rot)
+        MI_max_pos, MI_max, MI_map = cmif.get_transormation(self.fixed,self.moving,rot_deg=rot)
         
         self.MI_max_poss.append(MI_max_pos)
         self.MI_map.append(MI_map)
